@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - Sunset Auto Spa{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 250px;"> <!-- Reduced from 320px -->
+
+<!-- Page Header -->
+<section class="page-header py-5 bg-light">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold">Services & Pricing</h1>
+            <p class="lead">Professional car detailing packages designed to meet every need and budget</p>
+        </div>
+    </div>
+</section>
+
+<!-- Main Services -->
+<section class="main-services py-5">
+    <div class="container">
+        <div class="row">
+            {% for key, service in services.items() %}
+            <div class="col-lg-4 mb-5">
+                <div class="service-package border-0 shadow h-100 {{ 'border-primary' if key == 'gold' else '' }}">
+                    <div class="card h-100">
+                        {% if key == 'gold' %}
+                        <div class="card-header bg-primary text-white text-center">
+                            <span class="badge bg-warning text-dark">MOST POPULAR</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="card-body text-center p-4">
+                            <div class="package-icon mb-3">
+                                {% if key == 'bronze' %}
+                                    <i class="fas fa-car fa-3x text-warning"></i>
+                                {% elif key == 'silver' %}
+                                    <i class="fas fa-star fa-3x text-info"></i>
+                                {% else %}
+                                    <i class="fas fa-crown fa-3x text-warning"></i>
+                                {% endif %}
+                            </div>
+                            
+                            <h3 class="card-title">{{ service.name }}</h3>
+                            <div class="price mb-3">
+                                <span class="display-5 fw-bold text-primary">${{ service.price }}</span>
+                                <div class="text-muted">{{ service.duration }}</div>
+                            </div>
+                            <p class="text-muted mb-4">{{ service.description }}</p>
+                            
+                            <div class="features text-start">
+                                <h6 class="fw-bold">Exterior Services:</h6>
+                                <ul class="list-unstyled mb-3">
+                                    {% for item in service.exterior[:3] %}
+                                    <li><i class="fas fa-check text-success me-2"></i>{{ item }}</li>
+                                    {% endfor %}
+                                    {% if service.exterior|length > 3 %}
+                                    <li class="text-muted">+ {{ service.exterior|length - 3 }} more services</li>
+                                    {% endif %}
+                                </ul>
+                                
+                                <h6 class="fw-bold">Interior Services:</h6>
+                                <ul class="list-unstyled mb-4">
+                                    {% for item in service.interior %}
+                                    <li><i class="fas fa-check text-success me-2"></i>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('service_detail', package=key) }}" 
+                                   class="btn btn-outline-primary">View Full Details</a>
+                                <a href="{{ url_for('book') }}?service={{ key }}" 
+                                   class="btn btn-primary">Book This Package</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Premium Services -->
+<section class="premium-services py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Premium Protection Services</h2>
+            <p class="lead">Advanced services for ultimate vehicle protection and enhancement</p>
+        </div>
+        
+        <div class="row">
+            {% for service in premium_services %}
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-gem fa-2x text-primary me-3"></i>
+                            <h4 class="card-title mb-0">{{ service.name }}</h4>
+                        </div>
+                        <p class="card-text mb-3">{{ service.description }}</p>
+                        
+                        <h6 class="fw-bold">Features:</h6>
+                        <ul class="list-unstyled mb-4">
+                            {% for feature in service.features %}
+                            <li><i class="fas fa-star text-warning me-2"></i>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <a href="{{ url_for('contact') }}" class="btn btn-primary">Get Custom Quote</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Service Comparison -->
+<section class="service-comparison py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Compare Our Packages</h2>
+            <p class="lead">Choose the perfect package for your vehicle's needs</p>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Service</th>
+                        <th class="text-center">Bronze</th>
+                        <th class="text-center">Silver</th>
+                        <th class="text-center">Gold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Price</strong></td>
+                        <td class="text-center">${{ services.bronze.price }}</td>
+                        <td class="text-center">${{ services.silver.price }}</td>
+                        <td class="text-center">${{ services.gold.price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duration</strong></td>
+                        <td class="text-center">{{ services.bronze.duration }}</td>
+                        <td class="text-center">{{ services.silver.duration }}</td>
+                        <td class="text-center">{{ services.gold.duration }}</td>
+                    </tr>
+                    <tr>
+                        <td>Exterior Wash</td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Interior Cleaning</td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Wheel Scrubbing</td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Wax Protection</td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Clay Treatment</td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Leather Conditioning</td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-times text-danger"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Book Your Service?</h2>
+        <p class="lead mb-4">Get your vehicle the care it deserves with our professional detailing services</p>
+        <a href="{{ url_for('book') }}" class="btn btn-light btn-lg">Book Online Now</a>
+    </div>
+</section>
+{% endblock %} 

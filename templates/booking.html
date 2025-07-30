@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Book Your Service - Sunset Auto Spa{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 250px;"> <!-- Reduced from 320px -->
+
+<!-- Page Header -->
+<section class="page-header py-5 bg-light">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold">Book Your Service Online</h1>
+            <p class="lead">Get a personalized quote and schedule your car detailing service</p>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Form -->
+<section class="booking-form py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Quote Form -->
+            <div class="col-lg-8 mb-5">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-5">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                            Request Your Quote
+                        </h3>
+                        
+                        <form action="{{ url_for('get_quote') }}" method="POST">
+                            <!-- Personal Information -->
+                            <div class="form-section mb-4">
+                                <h5 class="section-title">Contact Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Full Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="phone" class="form-label">Phone Number *</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="preferred_date" class="form-label">Preferred Date</label>
+                                        <input type="date" class="form-control" id="preferred_date" name="preferred_date">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Service Selection -->
+                            <div class="form-section mb-4">
+                                <h5 class="section-title">Service Selection</h5>
+                                <div class="service-options">
+                                    {% for key, service in services.items() %}
+                                    <div class="service-option mb-3">
+                                        <div class="card border h-100">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="service" 
+                                                           id="service-{{ key }}" value="{{ service.name }}" 
+                                                           {% if request.args.get('service') == key %}checked{% endif %}>
+                                                    <label class="form-check-label w-100" for="service-{{ key }}">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">{{ service.name }}</h6>
+                                                                <small class="text-muted">{{ service.description }}</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <div class="price fw-bold">${{ service.price }}</div>
+                                                                <small class="text-muted">{{ service.duration }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <div class="service-option mb-3">
+                                        <div class="card border h-100">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="service" 
+                                                           id="service-custom" value="Custom Package">
+                                                    <label class="form-check-label w-100" for="service-custom">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="mb-1">Custom Package</h6>
+                                                                <small class="text-muted">Paint correction, ceramic coating, or custom service</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <div class="price fw-bold">Quote</div>
+                                                                <small class="text-muted">Varies</small>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Vehicle Information -->
+                            <div class="form-section mb-4">
+                                <h5 class="section-title">Vehicle Information</h5>
+                                <div class="mb-3">
+                                    <label for="vehicle_info" class="form-label">Vehicle Details *</label>
+                                    <textarea class="form-control" id="vehicle_info" name="vehicle_info" rows="3" 
+                                              placeholder="Please provide: Year, Make, Model, Color, and any specific concerns or requests..." required></textarea>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Get My Quote
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Information -->
+            <div class="col-lg-4">
+                <div class="booking-info">
+                    <!-- Quick Contact -->
+                    <div class="card border-0 shadow mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">
+                                <i class="fas fa-phone text-primary me-2"></i>Need Immediate Service?
+                            </h5>
+                            <p class="mb-3">Call us now for same-day appointments and emergency services.</p>
+                            <a href="tel:+17472093180" class="btn btn-primary w-100">
+                                <i class="fas fa-phone me-2"></i>Call (747) 209-3180
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- What to Expect -->
+                    <div class="card border-0 shadow mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">
+                                <i class="fas fa-info-circle text-primary me-2"></i>What to Expect
+                            </h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Quote response within 2 hours
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Flexible scheduling options
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Professional service guarantee
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    100% satisfaction promise
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Areas -->
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>Service Areas
+                            </h5>
+                            <p class="mb-2">We proudly serve:</p>
+                            <ul class="list-unstyled small mb-0">
+                                <li>• 4246 Levitt Ln, Sherman Oaks, CA 91403 and surrounding areas</li>
+                                <li>• Mobile service available</li>
+                                <li>• Free estimates</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Book With Us -->
+<section class="why-book py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Why Book With Sunset Auto Spa?</h2>
+            <p class="lead">Experience the difference with our premium service</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-award fa-3x text-primary"></i>
+                    </div>
+                    <h5>Expert Technicians</h5>
+                    <p>Certified professionals with years of experience in premium car detailing.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                    </div>
+                    <h5>Premium Products</h5>
+                    <p>Only the highest quality products from trusted automotive brands.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-clock fa-3x text-primary"></i>
+                    </div>
+                    <h5>Convenient Scheduling</h5>
+                    <p>Flexible appointment times that work with your busy schedule.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-thumbs-up fa-3x text-primary"></i>
+                    </div>
+                    <h5>Satisfaction Guarantee</h5>
+                    <p>100% satisfaction guarantee - we'll make it right if you're not happy.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
